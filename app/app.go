@@ -1,8 +1,9 @@
-package main
+package app
 
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	"goSocialNetwork/post"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -29,6 +30,11 @@ func New() (*App, error) {
 func (a *App) Run() {
 	log.Println("Serving on post 8000")
 	log.Fatalln(http.ListenAndServe(":8000", a.Router))
+}
+
+func (a *App) Migrate() error {
+	err := a.DB.AutoMigrate(&post.Post{})
+	return err
 }
 
 func (a *App) Routes() {
