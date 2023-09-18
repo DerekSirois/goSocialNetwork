@@ -1,6 +1,7 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"goSocialNetwork/post"
@@ -13,6 +14,10 @@ import (
 type App struct {
 	DB     *gorm.DB
 	Router *mux.Router
+}
+
+type Response struct {
+	Msg string
 }
 
 func New() (*App, error) {
@@ -39,10 +44,28 @@ func (a *App) Migrate() error {
 
 func (a *App) Routes() {
 	a.Router.HandleFunc("/", index()).Methods("GET")
+	a.Router.HandleFunc("/api/post", a.GetAllPostHandler()).Methods("GET")
+	a.Router.HandleFunc("/api/post", a.CreatePostHandler()).Methods("POST")
+	a.Router.HandleFunc("/api/post/{id:[0-9]+}", a.GetPostByIdHandler()).Methods("GET")
+	a.Router.HandleFunc("/api/post/{id:[0-9]+}", a.UpdatePostHandler()).Methods("PUT")
+	a.Router.HandleFunc("/api/post/{id:[0-9]+}", a.DeletePostHandler()).Methods("DELETE")
 }
 
 func index() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		fmt.Fprintln(writer, "Welcome to the Go social network")
+		_, _ = fmt.Fprintln(writer, "Welcome to the Go social network")
+	}
+}
+
+func (a *App) respond(writer http.ResponseWriter, _ *http.Request, data interface{}, statusCode int) {
+	writer.Header().Add("Content-Type", "application/json")
+	writer.WriteHeader(statusCode)
+	if data == nil {
+		return
+	}
+	fmt.Println(data)
+	err := json.NewEncoder(writer).Encode(data)
+	if err != nil {
+		log.Printf("Cannot format json err=%v\n", err)
 	}
 }
