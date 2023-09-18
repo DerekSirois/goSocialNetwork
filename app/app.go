@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
-	"goSocialNetwork/post"
+	"goSocialNetwork/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -33,12 +33,12 @@ func New() (*App, error) {
 }
 
 func (a *App) Run() {
-	log.Println("Serving on post 8000")
+	log.Println("Serving on models 8000")
 	log.Fatalln(http.ListenAndServe(":8000", a.Router))
 }
 
 func (a *App) Migrate() error {
-	err := a.DB.AutoMigrate(&post.Post{})
+	err := a.DB.AutoMigrate(&models.Post{})
 	return err
 }
 
@@ -63,7 +63,6 @@ func (a *App) respond(writer http.ResponseWriter, _ *http.Request, data interfac
 	if data == nil {
 		return
 	}
-	fmt.Println(data)
 	err := json.NewEncoder(writer).Encode(data)
 	if err != nil {
 		log.Printf("Cannot format json err=%v\n", err)

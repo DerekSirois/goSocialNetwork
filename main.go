@@ -9,14 +9,14 @@ import (
 func main() {
 	fmt.Println("Welcome to the Go social network")
 
-	app, err := app.New()
+	a, err := app.New()
 	handleError(err)
 
-	err = app.Migrate()
+	err = a.Migrate()
 	handleError(err)
 
-	app.Routes()
-	app.Run()
+	a.Routes()
+	a.Run()
 }
 
 func handleError(err error) {

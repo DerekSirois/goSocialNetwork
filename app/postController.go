@@ -3,7 +3,7 @@ package app
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"goSocialNetwork/post"
+	"goSocialNetwork/models"
 	"log"
 	"net/http"
 	"strconv"
@@ -48,7 +48,7 @@ func (a *App) GetPostByIdHandler() http.HandlerFunc {
 
 func (a *App) CreatePostHandler() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		p := &post.Post{}
+		p := &models.Post{}
 		err := json.NewDecoder(request.Body).Decode(p)
 		if err != nil {
 			log.Println(err)
@@ -71,7 +71,7 @@ func (a *App) CreatePostHandler() http.HandlerFunc {
 
 func (a *App) UpdatePostHandler() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		p := &post.Post{}
+		p := &models.Post{}
 		err := json.NewDecoder(request.Body).Decode(p)
 		if err != nil {
 			log.Println(err)
