@@ -3,8 +3,9 @@ package app
 import (
 	"encoding/json"
 	"goSocialNetwork/models"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserJson struct {
@@ -33,6 +34,28 @@ func (a *App) Register() http.HandlerFunc {
 			return
 		}
 		a.respond(writer, request, &Response{Msg: "User created successfully"}, http.StatusOK)
+	}
+}
+
+func (a *App) Login() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		u := &UserJson{}
+		err := json.NewDecoder(request.Body).Decode(u)
+		if err != nil {
+			a.handleError(writer, request, err, http.StatusBadRequest)
+			return
+		}
+		uDb, err := a.GetUserByUsername(u.Username)
+		if err != nil {
+			a.handleError(writer, request, err, http.StatusNotFound)
+			return
+		}
+		err = bcrypt.CompareHashAndPassword(uDb.Password, []byte(u.Password))
+		if err != nil {
+			a.respond(writer, request, &Response{Msg: "Wrong password"}, http.StatusBadRequest)
+			return
+		}
+		a.respond(writer, request, &Response{Msg: "You are logged in"}, http.StatusOK)
 	}
 }
 

@@ -51,6 +51,7 @@ func (a *App) Routes() {
 	a.Router.HandleFunc("/api/post/{id:[0-9]+}", a.DeletePostHandler()).Methods("DELETE")
 
 	a.Router.HandleFunc("/api/register", a.Register()).Methods("POST")
+	a.Router.HandleFunc("/api/login", a.Login()).Methods("POST")
 }
 
 func index() http.HandlerFunc {
