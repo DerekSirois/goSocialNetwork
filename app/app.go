@@ -38,7 +38,7 @@ func (a *App) Run() {
 }
 
 func (a *App) Migrate() error {
-	err := a.DB.AutoMigrate(&models.Post{})
+	err := a.DB.AutoMigrate(&models.Post{}, &models.User{})
 	return err
 }
 
@@ -49,6 +49,8 @@ func (a *App) Routes() {
 	a.Router.HandleFunc("/api/post/{id:[0-9]+}", a.GetPostByIdHandler()).Methods("GET")
 	a.Router.HandleFunc("/api/post/{id:[0-9]+}", a.UpdatePostHandler()).Methods("PUT")
 	a.Router.HandleFunc("/api/post/{id:[0-9]+}", a.DeletePostHandler()).Methods("DELETE")
+
+	a.Router.HandleFunc("/api/register", a.Register()).Methods("POST")
 }
 
 func index() http.HandlerFunc {
