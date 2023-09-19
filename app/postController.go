@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"goSocialNetwork/models"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -92,11 +91,4 @@ func (a *App) DeletePostHandler() http.HandlerFunc {
 		}
 		a.respond(writer, request, &Response{Msg: "Post deleted successfully"}, http.StatusOK)
 	}
-}
-
-func (a *App) handleError(w http.ResponseWriter, r *http.Request, err error, statusCode int) {
-	log.Println(err)
-	a.respond(w, r, &Response{
-		Msg: err.Error(),
-	}, statusCode)
 }

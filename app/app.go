@@ -68,3 +68,10 @@ func (a *App) respond(writer http.ResponseWriter, _ *http.Request, data interfac
 		log.Printf("Cannot format json err=%v\n", err)
 	}
 }
+
+func (a *App) handleError(w http.ResponseWriter, r *http.Request, err error, statusCode int) {
+	log.Println(err)
+	a.respond(w, r, &Response{
+		Msg: err.Error(),
+	}, statusCode)
+}
