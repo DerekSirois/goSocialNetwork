@@ -55,7 +55,12 @@ func (a *App) Login() http.HandlerFunc {
 			a.respond(writer, request, &Response{Msg: "Wrong password"}, http.StatusBadRequest)
 			return
 		}
-		a.respond(writer, request, &Response{Msg: "You are logged in"}, http.StatusOK)
+		token, err := CreateJWTToken(int(uDb.ID), uDb.Username)
+		if err != nil {
+			a.handleError(writer, request, err, http.StatusInternalServerError)
+			return
+		}
+		a.respond(writer, request, &ResponseToken{Token: token}, http.StatusOK)
 	}
 }
 
